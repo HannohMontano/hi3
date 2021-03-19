@@ -1,0 +1,55 @@
+<!doctype html>
+<html class="no-js" lang="es">
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/maps/escuelasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:43 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta name="author" content="Ernesto Martínez Espinosa" />
+    <meta name="copyright" content="SEP - SIGED" />
+    <title>SEP | SIGED</title>
+    <link rel="stylesheet" href="../../../unpkg.com/leaflet%401.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="../../../unpkg.com/leaflet%401.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    <style>
+        #mapid {
+            height: 380px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mapid"></div>
+    <script>
+        var mymap = L.map('mapid');
+        let markerSchool;
+        const tilesProvider = '../../../%7bs%7d.tile.openstreetmap.fr/osmfr/%7bz%7d/%7bx%7d/%7by%7d.png';
+        mymap.doubleClickZoom.disable();
+        L.tileLayer(tilesProvider, {
+            maxZoom: 18,
+        }).addTo(mymap);/**/
+
+        function crearMarker(latC, lngC) {
+            
+            mymap.setView([latC, lngC], 13);
+            markerSchool = L.marker([latC, lngC], { center: [latC, lngC] }).addTo(mymap);
+            
+        }
+
+        window.addEventListener('message', event => {
+            
+            resultado = eval(event.data);
+
+        }); 
+    </script>
+</body>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/maps/escuelasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:44 GMT -->
+</html>

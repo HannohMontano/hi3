@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="no-js" lang="es" ng-app="alumnos">
+    
+<!-- Mirrored from siged.sep.gob.mx/SIGED/alumnos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:16 GMT -->
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>SEP | SIGED</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="shortcut icon" href="https://framework-gb.cdn.gob.mx/favicon.ico">
+        <link rel="stylesheet" type="text/css" href="css/datatables.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/global-style.css">
+        <link rel="stylesheet" type="text/css" href="../../framework-gb.cdn.gob.mx/assets/styles/main.css">
+        <link rel="stylesheet" type="text/css" href="css/sige.css">
+        <link rel="stylesheet" type="text/css" href="css/banner.css">
+        <link rel="stylesheet" type="text/css" href="css/font-awesome.css">
+        <link rel="stylesheet" href="assets/layerslider/css/layerslider.css" type="text/css">
+    <link rel="stylesheet" href="calendar/simbologia/StyleSheet.css" type="text/css">
+    <script src="js/Chart.html"></script>
+    <!--script src="https://maps.googleapis.com/maps/api/js"></script->
+
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/ie8/0.2.2/ie8.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        .periodo{
+          background-color: #eee;
+          padding: 10px;
+          margin: 10px;
+        }
+
+        .banner{
+            height: 240px;
+            background-image: url("ima/BannerAlumnos.jpg"); 
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+}
+
+    </style>
+    <script type="text/javascript">
+
+        function cambiar() {
+            console.info("cambia");
+            var indice = 0;
+            frases = new Array();
+            frases[0] = "25,897,636 Niños <br> Cursan educación básica en todo el país";
+            frases[1] = "Texto2";
+            frases[2] = "Texto3";
+            frases[3] = "Texto4";
+            frases[4] = "Texto5";
+            frases[5] = "Texto6";
+            frases[6] = "Texto7";
+
+
+
+            indice = Math.random()*(frases.length);
+            indice = Math.floor(indice);
+
+            if (indice == frases.length) {indice = 0;}
+            document.getElementById("frase").innerHTML = frases[indice];
+            document.getElementById("frase2").innerHTML = frases[indice];
+            indice++;
+            setTimeout("cambiar();", 5*1000);
+        }
+</script>
+<link rel="stylesheet" href="css/cambios.css" type="text/css">
+
+</head>
+<body ng-controller="alumnosController" onload="cambiar();">
+    <!-- inicial -->
+
+<div id="header"></div>
+    <div class="container-fluid banner row">
+        <div class="row col-md-12">
+            <div class="col-md-8" id="textos">
+                <section id="textoSigedCol"><h4 class="header-main" id="textoSiged" style="margin-left:130px; margin-top:70px;color: white" >Sistema de Información y Gestión Educativa</h4></section>
+                <section><h2 class=" header-main" id="textoSub" style="margin-left:130px;margin-top:-5px;color:white;text-transform:none" >Consulta de alumnos</h2></section>
+            </div>
+        <div class="col-md-4 info-adicional-banner" >
+                <p class="ls-l" id="caja" style="margin-right: 250px;margin-top: 80px;line-height:15px;color:white;background:rgba(0,0,0,0.5);padding:10px 100px;  text-align:justify;"  >
+                    <span class="span_dato_curioso icono_curioso"  >
+                        <i class="fa fa-child" style="color:#25DDDA; font-size:0.6em;margin-left: -100px"></i>
+                        <b class="numero" id="numero" style="font-size:0.5em">25,897,636</b>
+                        <br>
+                        <b class="texto" style="font-size:0.5em;margin-left: -80px">Niños</b>
+                    </span></p>
+                <p style="width: 220px;text-align: center;margin-top: -70px;color: white;margin-left: 150px;" id="textoSubCaja">Cursan educación básica en todo el país</p>
+                
+            </div>
+        </div>
+</div>
+</div>
+
+
+<div class="container">
+    <section id="main-search" class="slice bg-white" style="margin-top:10px; padding-top: 0px; z-index: 20">
+        <div class="container" >
+            <div class="wp-section relative" id="formulario">
+                <form class="form-inline" role="form" id="form_id" name="myform" ng-submit="getConsultaByCURP();">
+                    <div class="inline-form-filters over-top-element base" style="background-color: #545454">
+                        <!-- Optional filters tigger button -->
+
+                        <!-- Main filters -->
+                        <div class="row">
+
+                            <div class="col-md-8">
+                                <div class="form-group form-group-lg">
+                                    <label class="sr-only">Search text</label>
+                                    <input id="curpAlumno" class="form-control" size="30" maxlength="18" onkeyup="javascript:this.value = this.value.toUpperCase();"   ng-model="curp" type="text" placeholder="CURP" style="background:rgb(225,225,225);color:black;font-size: 18px" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="col-md-6"><button type="submit" ng-click="Search()" class="btn btn-info  btn-buscar">Buscar</button></div>
+                                <div class="col-md-6"><button type="reset" ng-click="newSearch()" class="btn btn-warning btn-buscar" id="Restablecer">Restablecer</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+    <div class="container">
+        <section id="home">
+            <div class="row">
+                <div class="col-sm-8">
+                    <ol class="breadcrumb">
+                        <li><a href="index.html"><i class="icon icon-home"></i></a></li>
+                        <li><a href="index.html">Inicio</a></li>
+                        <li><a href="index.html#info">Consultas</a></li>
+                        <li><a href="#">Consulta de alumnos</a></li>
+                        <!--li class="active">Formulario básico</li-->
+                    </ol>
+                </div>
+            </div>
+        </section>
+                  <!--section  ng-if="ciclos == null && datos == null && datos == 0 && datosUltimo == null && datosUltimo == 0" id="noEncontrada"-->
+                    <section ng-cloak ng-if="ciclos == null && primeraBusqueda == 0 && datosUltimo == null" id="noEncontrada">
+            <!-- /inicial -->
+            <!-- CURP no encontrada -->
+            <div data-role="page" >
+                <div class="top-buffer-submenu">
+                    <h4>Información no encontrada</h4>
+                    <hr class="red">
+                    <section>
+                        <div class="alert alert-danger">
+                            <p><b>La información solicitada no se encuentra en nuestros registros.</b></p>
+                            <br>
+                            <!--p>Verifica que la hayas escrito bien y vuelve a intentarlo.</p>
+                            <p>Si después de intentarlo nuevamente, la CURP no es localizada o si los datos que presenta no coinciden con los del alumno, deberás notificarlo a la autoridad de tu centro educativo.</p-->
+                            <P>Verifica la CURP del alumno y vuelve a intentarlo.</P>
+                            <BR>
+                            <button class="btn btn-danger " style="display:block; margin-left:auto; margin-right:auto" type="reset" ng-click="newSearch()" onclick="$('html,body').scrollTop(0);">Volver a intentarlo</button>
+                        </div>
+                        <!--br>
+                        <div class="alert alert-warning">
+                            <p>Si deseas puedes reportar ese problema en el módulo de <a href="contacto.html" title="Reporte de inconsistencias de información"> Reporte de inconsistencias de información</a>.</p>
+                        </div-->
+                    </section>
+                    <h4>Acerca de la Clave Única de Registro de Población (CURP)</h4>
+                    <hr class="red">
+                    <section>
+                        <p>La CURP es indispensable para llevar un registro en empresas, escuelas, afiliación en los servicios de salud, solicitud de pasaportes, y otras dependencias gubernamentales.</p>
+                        <p>Si no tienes una puedes consultar cómo tramitarla <a target="_blank" href="https://www.gob.mx/segob/acciones-y-programas/clave-unica-de-registro-de-poblacion-curp" title="Tramita CURP">aquí</a>.</p>
+                        <p>Si no la recuerdas puedes consultarla <a target="_blank" href="https://consultas.curp.gob.mx/CurpSP/" title="Consulta CURP">aquí</a>.</p>
+                        <br>
+                    </section>
+                </div>
+            </div>
+          </section>
+
+
+        <section id="Encontrada" style="display: none">
+   
+            <section  ng-if="datosUltimo != null || (datosUltimo != null && ciclos != null)">
+            
+<!-- 
+                      <h4>¿Problemas con la información?</h4>
+                      <hr class="red">
+                        <div class="alert alert-warning" style="margin-top:-6vh">
+                            <p>En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar, ponte en contacto con la autoridad de tu centro escolar.</p>
+                            <p>Si deseas puedes reportar este problema en el módulo de <a href="contacto.html" title="Reporte de inconsistencias de información"> Reporte de inconsistencias de información</a>.</p>
+                                <p>En caso de que la información presentada no coincida con tus resultados del ciclo escolar ponte en contacto con la autoridad de tu centro escolar.</p>
+                                <br>
+                                <p>Si deseas puedes reportar este problema en el módulo de <a href="contacto.html" title="Reporte de inconsistencias de información"> Reporte de inconsistencias de información</a>.</p>
+                        </div>
+-->
+                      <hr class="red">
+                        <div style="margin-top:-6vh">
+                            <p>La información de las calificaciones que se muestran en este portal, son el resultado de la integración de información que envían las autoridades educativas de los estados y la Ciudad de México. "En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar."</p>
+                            <p>La información presentada es de carácter informativa, toda vez que es una representación de las calificaciones registradas en las boletas. El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares.</p>
+                        </div>
+                      <br>
+            
+                      <div class="row">
+                          <div class="col-md-12">
+                              <h4>Última información del alumno</h4>
+                          </div>
+                      </div>
+                      <hr class="red">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-2 alert-datos-incial alert alert-info text-center"  ng-show="datosUltimo.controlEscolar.cicloEscolar != null">
+                                    <p>Ciclo</p>
+                                    <h5> {{datosUltimo.controlEscolar.cicloEscolar}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-success text-center"  ng-show="datosUltimo.controlEscolar.nivelEduc != null">
+                                    <p>Nivel</p>
+                                    <h5> {{datosUltimo.controlEscolar.nivelEduc}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-warning text-center"  ng-show="datosUltimo.controlEscolar.turno != null">
+                                    <p>Turno</p>
+                                    <h5>{{datosUltimo.controlEscolar.turno}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-success text-center"  ng-show="datosUltimo.controlEscolar.grado != null">
+                                    <p>Grado</p>
+                                    <h5>{{datosUltimo.controlEscolar.grado}}</h5>
+                                </div>
+                                  <div class="col-md-2 alert-datos-incial alert alert-warning text-center" ng-show="datosUltimo.controlEscolar.grupo != null">
+                                    <p>Grupo</p>
+                                    <h5>{{datosUltimo.controlEscolar.grupo}}</h5>
+                                </div>
+                                 <div class="col-md-2 alert-datos-incial alert alert-info text-center" ng-show="calificacionFinalUltima">
+                                    <p>Promedio</p>
+                                    <h5>{{calificacionFinalUltima}}</h5>
+                                </div>
+                            </div>
+                    </section><br>
+            <!-- CURP encontrada -->
+      
+       
+                    <section ng-if="ciclos != null">
+                    <div class="row">
+                          <div class="col-md-12">
+                          	<br>
+                              <h4>Información histórica del alumno</h4>
+                          </div>
+                      </div>
+                      <hr class="red">
+	                   	<ul class="nav nav-tabs" id="profile">
+						  <li  ng-repeat="ciclo in ciclos" ><a data-toggle="tab"  class="detalleAlumno" ng-click="detalleAlumnos(ciclo.id)" >Boleta  {{ciclo.nombre}}</a></li>
+						</ul>
+						<div ng-if="buscandoBoleta">
+							<br>
+							<i class="fa fa-spin fa-spinner"></i> Buscando información por favor espere
+						</div>
+						<div ng-if="!buscandoBoleta" class="tab-content">
+						
+						  <div class="row" style="margin-bottom:10px" ng-if="datos.controlEscolar.cicloEscolar != datosUltimo.controlEscolar.cicloEscolar">
+                            <div class="col-md-2 alert-datos-incial alert alert-info text-center"  ng-show="datos.controlEscolar.nivelEduc != null">
+                                	<p>Ciclo</p>
+                                    <h5> {{datos.controlEscolar.cicloEscolar}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-success text-center"  ng-show="datos.controlEscolar.nivelEduc != null">
+                                	<p>Nivel</p>
+                                    <h5> {{datos.controlEscolar.nivelEduc}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-warning text-center"  ng-show="datos.controlEscolar.nivelEduc != null">
+                                	<p>Turno</p>
+                                    <h5> {{datos.controlEscolar.turno}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-success text-center"  ng-show="datos.controlEscolar.grado != null">
+                                    <p>Grado</p>
+                                    <h5>{{datos.controlEscolar.grado}}</h5>
+                                </div>
+                                <div class="col-md-2 alert-datos-incial alert alert-info text-center"  ng-show="datos.controlEscolar.grupo != null">
+                   					<p>Grupo</p>
+                                    <h5>{{datos.controlEscolar.grupo}}</h5>
+                                </div>
+                                <!--div class="col-md-2 alert-datos-incial alert alert-warning text-center" ng-show= "calificacionFinal != null">
+                                    <p>Promedio</p>
+                                    <h5>{{calificacionFinal}}</h5>
+                                </div-->
+                                <!-- div class="col-md-2 alert-datos-incial alert alert-info text-center"  ng-show="cert != null">
+                   					<a><p>Consultar certificado</p>
+                                    <h5><i class="fa fa-file-text-o"></i></h5>
+                                    </a>
+                                </div-->
+                           </div>
+						  <div id="home" class="tab-pane fade in active">
+                            <div class="row">
+							
+						     <table class="table table-striped table-calificaciones table-responsive" ng-repeat="materia in materias | limitTo : 1">
+	                            <thead>
+	                              <tr>
+	                                <th style="font-size: 14px;text-align: center;">Periodo</th>
+	                                <th ng-repeat="materia in materias"><P style="font-size: 14px;">{{materia.asignatura}}</P> </th>
+	                              </tr>
+	                            </thead>
+	                          <tbody>
+	                            <tr ng-repeat="periodo in boleta" >
+	                                <td ng-repeat="calificacion in periodo"> {{calificacion.dato}} </td>
+	                            </tr>
+	                          </tbody>
+	                        </table><br>
+						    </div>
+						      	<div class="row" id="mensajeAbajo">
+							   <div class="col-md-6 " ng-show= "calificacionFinal"> 
+	                             <div class="col-md-6 alert text-center" >
+	                             	    <p ><B>Promedio del alumno</B></p>
+	                                    <h5 >{{calificacionFinal}}</h5>
+	                             </div>
+	                            <div class="col-md-6 alert text-center" ng-show="promedioGrupal && calificacionFinal">
+	                            	 <p><B>Promedio en escuela</B></p>
+	                                 <h5 >{{promedioGrupal}}</h5>
+	                            </div>
+	                            <div class="col-md-6 alert text-center" ng-show="!promedioGrupal && calificacionFinal">
+									<p><i class="fa fa-spin fa-spinner"></i> Buscando información por favor espere</p>
+	                            </div>
+                            </div>
+                            <div class="col-md-6" ng-if="calificacionFinal">
+                                <div id="promedio" ng-class="mensajeFinal.alerta" style="margin-bottom:10px">
+                                    <p id="mensaje" >
+                                      <i ng-class="mensajeFinal.icon"></i>
+                                      <br>
+                                      {{mensajeFinal.mensaje}}
+                                    </p>
+                                </div>
+                            </div>
+                            </div>
+						  </div>
+						</div>
+                    </section>
+
+
+                    <!-- section  ng-show="boleta != null && boleta.length > 0" >
+                    <br>
+                      <h4>Calificaciones en el ciclo escolar <b>{{datos.controlEscolar.cicloEscolar}}</b></h4>
+                    <br>
+                      <!--div class="row">
+                          <div class="col-md-6 " ng-repeat="periodo in boleta" >
+                            <div class="col-md-12 periodo">
+                              <p><b> Periodo {{periodo.periodo}}</b></p>
+                            </div>
+                            <div class="col-md-12" ng-repeat="materias in periodo.asignaturaDTO">
+                              <div class="col-md-9">
+                                <p>{{materias.asignatura}}</p>
+                              </div>
+                              <div class="col-md-3">
+                                <p>{{materias.calificacion}}</p>
+                              </div>
+                            </div>
+                        </div>
+                      </div-->
+        
+
+
+                    <!-- /Información de materias ciclo -->
+                    <!-- Estadísticas en la escuela -->
+                    <!--section ng-if="estadisticasEscuela != null && estadisticasEscuela.length > 0" >
+                      <div class="col-md-12">
+                          <h4>Estadísticas en la escuela</h4>
+                      </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                  <H5 class="text-center"><i class="fa fa-group"></i> Calificación promedio por grado escolar</h5>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                      <br>
+                                        <table id="calificaciones_grupo" class="table" >
+                                            <tbody class="alert alert-info">
+                                                <tr style="border: hidden" ng-repeat="grados in estadisticasEscuela" >
+                                                    <td align="left" style="0px 10px"><h5>{{grados.grado}}</h5></td>
+                                                    <td align="right" style="0px 10px"><h5>{{grados.promedio}}</h5></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-9">
+                                        <div id="container_grafica" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <section ng-show="datos.controlEscolar.prom != 0 && datos.controlEscolar.prom != null">
+                            <div class="col-md-offset-1 col-md-3">
+                                <h2 class="text-center">{{datos.controlEscolar.prom}}</h2>
+                                <H5 class="text-center">Calificación del alumno<br></h5>
+
+                                <div id="promedio" ng-class="class_alerta">
+                                    <p id="mensaje" >
+                                      <i ng-class="icon_alerta"></i>
+                                      <br>
+                                      {{msjstd}}
+                                    </p>
+                                </div>
+                            </div>
+                            </section>
+                        </div>
+                    </section-->
+                  <br>
+                    <section ng-if="datosUltimo != null && datosUltimo != 0 && fuentePlazaCurp != null && fuentePlazaCurp !== undefined">
+
+                        <div class="fuente">
+                            <p><b>Fuente de información</b></p>
+                            <!--p>Control Escolar Cierre de Ciclo Escolar <b>{{datos.controlEscolar.cicloEscolar}}</b></p>
+                            <p>La información exhibida en esta sección es proporcionada directamente por la Autoridad Educativa Local.</p-->
+                            <p>La información exhibida en este portal es proporcionada directamente por la entidad.</p>
+                            <p> <section ng-if="fuentePlazaCurp.fuentePlaza != null && fuentePlazaCurp.fuentePlaza != '' && fuentePlazaCurp !== undefined">{{fuentePlazaCurp.fuentePlaza}}, </section><b>{{fuentePlazaCurp.fuenteInformacion}}</b>, Ciclo escolar <b>{{datosUltimo.controlEscolar.cicloEscolar}}</b> </p>
+                        </div>
+<!--                    <br>
+
+                      <h4>¿Problemas con la información?</h4>
+                      <hr class="red">
+                        <div class="alert alert-warning" style="margin-top:-6vh">
+                            <p>En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar, ponte en contacto con la autoridad de tu centro escolar.</p>
+                            <p>Si deseas puedes reportar este problema en el módulo de <a href="contacto.html" title="Reporte de inconsistencias de información"> Reporte de inconsistencias de información</a>.</p>
+                                <p>En caso de que la información presentada no coincida con tus resultados del ciclo escolar ponte en contacto con la autoridad de tu centro escolar.</p>
+                                <br>
+                                <p>Si deseas puedes reportar este problema en el módulo de <a href="contacto.html" title="Reporte de inconsistencias de información"> Reporte de inconsistencias de información</a>.</p>
+                        </div>
+
+                      <hr class="red">
+                        <div style="margin-top:-6vh">
+                            <p>La información de las calificaciones que se muestran en este portal, son el resultado de la integración de información que envían las autoridades educativas de los estados y la Ciudad de México. "En caso de que la información presentada no coincida con tus resultados obtenidos en el ciclo escolar o no esté disponible, por favor ponte en contacto con la autoridad de tu centro escolar."</p>
+                            <p>La información presentada es de carácter informativa, toda vez que es una representación de las calificaciones registradas en las boletas. El documento oficial es el que se entrega a los padres o tutores de los educandos en sus centros escolares.</p>
+                        </div>
+-->
+                    </section>
+                    <br><br>
+                </div>
+            </div>
+        </section>
+        <!-- /CURP encontrada -->
+        <!-- modal cupr error -->
+        <div class="modal fade" id="modalCurpError">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Formato incorrecto</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>El formato de la CURP ingresada no es válido.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <!-- /modal cupr error -->
+        <script src="js/jquery.min.html"></script>
+        <script src="../../framework-gb.cdn.gob.mx/gobmx.js"></script>
+        <script src="../../framework-gb.cdn.gob.mx/assets/scripts/jquery-ui-datepicker.js"></script>
+        <script src='js/velocity.min.html'></script>
+        <script src="js/angular.html"></script>
+        <script src="js/angular-resource.html"></script>
+
+
+        <script src="js/siged.html"></script>
+        <script src="js/uri.html"></script>
+        <script src="js/alumnos.html"></script>
+        <script src="js/banner.html"></script>
+        <script type="text/javascript" src="js/datatables/jquery.dataTables.min.html"></script>
+        <script type="text/javascript" src="js/datatables/dataTables.bootstrap.min.html"></script>
+
+        <div class="modal fade" id="modal-loading" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h4 style="text-align:center"><i class="fa fa-spin fa-spinner"></i>Cargando información, por favor espera un momento...</h4>
+                    </div>
+                    <div class="tiempo_fuera modal-footer" style="display:none">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <label > La consulta está tardando más de lo normal</label>
+                            </div>
+                            <div class="col-md-5">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="$('.tiempo_fuera').hide()">Salir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '../../www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-83445936-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+    
+   <script charset="UTF-8"> 
+     $(function(){
+        $("#header").load("header.html");
+         $("#banner").load("banner.html");  
+
+});
+   </script>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/alumnos.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:17 GMT -->
+</html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html class="no-js" lang="es">
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/maps/plazasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:53 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta name="author" content="Ernesto Martínez Espinosa" />
+    <meta name="copyright" content="SEP - SIGED" />
+    <title>SEP | SIGED</title>
+    <link rel="stylesheet" href="../../../unpkg.com/leaflet%401.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="../../../unpkg.com/leaflet%401.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+</head>
+
+<body>
+    <div id="mapid" style="height: 600px;"></div>
+    <script>
+        var mymap = L.map('mapid', { language: 'es' }).setView([19.432608, -99.133209], 5);
+        let markerSchool;
+        var greenIcon = L.icon({
+            iconUrl: '../images/icono_escuela.png',
+
+            iconSize: [25, 25], // size of the icon
+        });
+        const tilesProvider = '../../../%7bs%7d.tile.openstreetmap.fr/osmfr/%7bz%7d/%7bx%7d/%7by%7d.png';
+        //mymap.doubleClickZoom.disable();
+        L.tileLayer(tilesProvider, {
+            maxZoom: 18,
+        }).addTo(mymap);/**/
+
+        function crearMarker(latC, lngC, pCT, infoEscuela) {
+
+            mymap.setView([latC, lngC], 12);
+            markerSchool = L.marker([latC, lngC], { icon: greenIcon }).addTo(mymap)
+                .on('click', function (e) {
+                    
+                    window.parent.postMessage([pCT,infoEscuela],"*");
+
+                });;
+            //markerSchool.bindPopup(`<b>${info}</b><br><a onclick = "top.contentWindow.postMessage('${info}', '*');">Ver escuela.</a>`).openPopup();
+        }
+
+        window.addEventListener('message', event => {
+
+            resultado = eval(event.data);
+
+        }); 
+    </script>
+</body>
+
+
+<!-- Mirrored from siged.sep.gob.mx/SIGED/maps/plazasOSM.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 19 Mar 2021 15:22:53 GMT -->
+</html>
